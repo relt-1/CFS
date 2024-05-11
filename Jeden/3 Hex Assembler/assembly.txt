@@ -1,0 +1,102 @@
+100h:
+
+MOV AL, 00h ; B0 00
+MOV DX, $test ; BA 00 02
+MOV AH, 3Dh ; B4 3D
+INT 21h ; CD 21  ; ill finish this later
+
+MOV BX, AX 
+MOV CX, 1000h
+MOV DX, $buffer
+MOV AH, 3Fh
+INT 21h
+
+MOV AH, 3Eh
+INT 21h
+
+MOV SI, $buffer
+MOV DI, $output
+MOV CX, 1000h
+MOV AH, 00h
+MOV BH, 00h
+
+JMP @comp
+
+luup:
+
+
+MOV BL, DL
+
+CMP BL, 0Ah
+JNE @newl
+MOV BH, 00h
+newl:
+CMP BH, 01h
+JE @comp
+
+CMP BL, 3Bh
+JNE @semicolon
+MOV BH, 01h
+JMP @comp
+
+semicolon:
+CMP BL, 21h
+JA @comp
+
+SHL AL, 4h
+
+AND DL, 1Fh
+CMP DL, 10h
+JA @number
+ADD DL, 9h
+JMP @shared
+
+number:
+SUB DL, 10h
+
+shared:
+OR AL, DL
+XOR AH, 01h
+JNZ @comp
+MOV [DI], AL
+INC DI
+
+
+comp:
+MOV DX, [SI]
+INC SI
+CMP DL, 00h
+LOOPNE @luup
+
+MOV CX, 00h
+MOV DX, $testout
+MOV AH, 3Ch
+INT 21h
+
+MOV BX, AX
+MOV CX, DI
+SUB CX, $output
+MOV DX, $output
+MOV AH, 40h
+INT 21h
+
+MOV AH, 3Eh
+INT 21h
+
+INT 20h
+
+test:
+"test.x" 00h
+
+testout:
+"test.out" 00h
+
+buffer:
+00h*1000h
+
+00h
+
+output:
+00h*1000h
+
+00h

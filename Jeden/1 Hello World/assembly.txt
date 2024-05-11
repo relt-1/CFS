@@ -1,0 +1,6 @@
+
+MOV AH, 2h
+MOV DL, 41h
+
+INT 21h
+INT 20h

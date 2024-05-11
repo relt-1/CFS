@@ -1,0 +1,40 @@
+100h:
+
+MOV AL, 00h
+MOV DX, $test
+MOV AH, 3Dh
+INT 21h
+MOV BX, AX
+MOV CX, 40h
+MOV DX, $buffer
+MOV AH, 3Fh
+INT 21h
+MOV AH, 02h
+MOV SI, $buffer
+MOV CX, 40h
+JMP $comp
+luup:
+INT 21h
+comp:
+MOV DX, [SI]
+INC SI
+CMP DL, 00h
+LOOPNE $luup
+MOV AH, 3Eh
+INT 21h
+
+INT 20h
+
+test:
+"test.x" 00h
+
+buffer:
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h 00h 00h 00h 00h 00h 00h 00h
+00h
